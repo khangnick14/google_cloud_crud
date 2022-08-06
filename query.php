@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'vendor/autoload.php';
+require_once 'php/google-api-php-client/vendor/autoload.php';
 ?>
 <?php
 $projectId = 'planar-flux-358507';
@@ -54,7 +54,7 @@ if (isset($_GET['searchValue']) || isset($_GET['comboCountry']) || isset($_GET['
 <?php
 //For Pagination
 $requestPagination = new Google_Service_Bigquery_QueryRequest();
-$qPagination = "SELECT * FROM [planar-flux-358507.datasheet_1.project_names] " . $search_query;
+$qPagination = "SELECT * FROM [planar-flux-358507.dataset_2.projects] " . $search_query;
 $requestPagination->setQuery($qPagination);
 $responsePagination = $bigquery->jobs->query($projectId, $requestPagination);
 $rowsPagination = $responsePagination->getRows();
@@ -73,7 +73,7 @@ if ($page > $num_of_page && $num_of_page != 0) {
     header("Location: home?" . http_build_query($data));
 }
 // For Table query
-$q = "SELECT * FROM [planar-flux-358507.datasheet_1.project_names] " . $search_query . " ORDER BY id limit " . intval($count) . " offset " . $offset;
+$q = "SELECT * FROM [planar-flux-358507.dataset_2.projects] " . $search_query . " ORDER BY id limit " . intval($count) . " offset " . $offset;
 $request->setQuery($q);
 $response = $bigquery->jobs->query($projectId, $request);
 $rows = $response->getRows();
@@ -83,10 +83,13 @@ $rows = $response->getRows();
 <html>
 <head>
     <meta charset='UTF-8'>
+    <link rel="stylesheet" style="text/css" href="/css/AdvanceTable.css">
+    <link rel="stylesheet" style="text/css" href="/css/Header.css">
+    <link rel="stylesheet" style="text/css" href="/css/InfrastructureForm.css">
     <title>2nd Question</title>
 </head>
 <?php
-include('header.php');
+include('Components/Header.php');
 ?>
 <body>
 <div class="main">
@@ -130,32 +133,6 @@ include('header.php');
                         echo $totalCount;
                         ?>>" <?php if ($_GET['comboQuantity'] == $totalCount) echo 'selected'; ?>>All
                         </option>
-                    </select>
-                </div>
-                <!--ComboBox-Nation-->
-                <div class="comboCountry">
-                    <label>Country:</label>
-                    <label for="comboCountry"></label>
-                    <select name="comboCountry" id="comboCountry" ">
-                    <option value=""></option>
-                    <?php
-                    $request2 = new Google_Service_Bigquery_QueryRequest();
-                    $qCountry = "SELECT Country FROM [planar-flux-358507.datasheet_1.project_names] Group by Country";
-                    $request2->setQuery($qCountry);
-                    $response2 = $bigquery->jobs->query($projectId, $request2);
-                    $rowsCountry = $response2->getRows();
-                    $echoString = '';
-                    foreach ($rowsCountry as $row) {
-                        foreach ($row['f'] as $field) {
-                            if ($field['v'] == $_GET['comboCountry']) {
-                                $echoString .= '<option value="' . $field['v'] . '" selected>' . $field['v'] . '</option>';
-                                continue;
-                            }
-                            $echoString .= '<option value="' . $field['v'] . '" >' . $field['v'] . '</option>';
-                        }
-                    }
-                    echo $echoString;
-                    ?>
                     </select>
                 </div>
                 <br>

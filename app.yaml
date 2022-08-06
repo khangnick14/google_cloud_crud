@@ -6,5 +6,5 @@ handlers:
     script: home.php
   - url: /home
     script: home.php
-  - url: /index
-    script: index.php
+  - url: /query
+    script: query.php
