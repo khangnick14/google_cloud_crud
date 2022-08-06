@@ -1,0 +1,10 @@
+runtime: php55
+api_version: 1
+
+handlers:
+  - url: /
+    script: home.php
+  - url: /home
+    script: home.php
+  - url: /index
+    script: index.php
